@@ -3,8 +3,6 @@ name: Deploy to Amazon ECS
 on:
   workflow_call: 
     inputs:
-      image_name: 
-        type: string
       ECR_REPOSITORY:
         type: string
       TASK_DEFINITION:

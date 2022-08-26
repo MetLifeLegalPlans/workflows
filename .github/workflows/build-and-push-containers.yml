@@ -1,9 +1,6 @@
 name: Deploy to Amazon ECS
 
 on:
-  push:
-    branches:
-      - "main"
   workflow_call: 
     inputs:
       image_name: 
@@ -18,12 +15,6 @@ on:
         type: string
       ECS_CLUSTER:
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID_DATA_PROD:
-        required: true
-      AWS_SECRET_ACCESS_KEY_DATA_PROD:
-        required: true
-        
 
 jobs:
   deploy:

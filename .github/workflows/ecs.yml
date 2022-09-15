@@ -13,13 +13,21 @@ on:
         type: string
       ECS_CLUSTER:
         type: string
+    secrets:
+      AWS_ACCESS_KEY_ID_DATA_PROD:
+        required: true
+      AWS_SECRET_ACCESS_KEY_DATA_PROD:
+        required: true
 
 jobs:
   deploy:
-    name: Build Image
+    name: Build and Push Containers
     runs-on: ubuntu-latest
     
     steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -40,10 +48,6 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Set Output Variables
-      id: build_output
-      run: |
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: Download task definition

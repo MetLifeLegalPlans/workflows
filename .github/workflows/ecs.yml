@@ -7,9 +7,6 @@ on:
         type: string
       cluster: 
         type: string
-      secrets:
-        AWS_ACCESS_KEY_ID_DATA_PROD: ${{ secrets.AWS_ACCESS_KEY_ID_DATA_PROD }}
-        AWS_SECRET_ACCESS_KEY_DATA_PROD: ${{ secrets.AWS_SECRET_ACCESS_KEY_DATA_PROD  }}
     secrets:
       AWS_ACCESS_KEY_ID_DATA_PROD:
         required: true

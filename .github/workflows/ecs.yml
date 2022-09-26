@@ -5,6 +5,11 @@ on:
     inputs:
       data:
         type: string
+      cluster: 
+        type: string
+      secrets:
+        AWS_ACCESS_KEY_ID_DATA_PROD: ${{ secrets.AWS_ACCESS_KEY_ID_DATA_PROD }}
+        AWS_SECRET_ACCESS_KEY_DATA_PROD: ${{ secrets.AWS_SECRET_ACCESS_KEY_DATA_PROD  }}
     secrets:
       AWS_ACCESS_KEY_ID_DATA_PROD:
         required: true
@@ -62,5 +67,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: ${{ inputs.data }}
-        cluster: ${{ inputs.data }}
+        cluster: ${{ inputs.cluster }}
         wait-for-service-stability: true

@@ -3,15 +3,7 @@ name: Deploy to Amazon ECS
 on:
   workflow_call: 
     inputs:
-      ECR_REPOSITORY:
-        type: string
-      TASK_DEFINITION:
-        type: string
-      CONTAINER_NAME:
-        type: string
-      ECS_SERVICE:
-        type: string
-      ECS_CLUSTER:
+      data:
         type: string
     secrets:
       AWS_ACCESS_KEY_ID_DATA_PROD:
@@ -43,7 +35,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ inputs.ECR_REPOSITORY }}
+        ECR_REPOSITORY: ${{ inputs.data }}
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -52,7 +44,7 @@ jobs:
 
     - name: Download task definition
       env:
-         TASK_DEFINITION: ${{ inputs.TASK_DEFINITION }}
+         TASK_DEFINITION: ${{ inputs.data }}
       run: |
          aws ecs describe-task-definition --task-definition $TASK_DEFINITION \
          --query taskDefinition > task-definition.json
@@ -62,13 +54,13 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
-        container-name: ${{ inputs.CONTAINER_NAME }}
+        container-name: ${{ inputs.data }}
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: ${{ inputs.ECS_SERVICE }}
-        cluster: ${{ inputs.ECS_CLUSTER }}
+        service: ${{ inputs.data }}
+        cluster: ${{ inputs.data }}
         wait-for-service-stability: true
